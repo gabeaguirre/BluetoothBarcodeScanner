@@ -7,6 +7,9 @@ import android.os.Message;
 import android.os.ParcelUuid;
 import android.widget.Toast;
 
+import com.gma.bluetoothbarcodescanner.activities.LaunchingActivity;
+import com.gma.bluetoothbarcodescanner.interfaces.HandlerBluetooth;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
@@ -17,6 +20,7 @@ public class BluetoothService{
     private final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     private Context mContext;
     private BluetoothDevice mDevice;
+    private HandlerBluetooth mHandlerBluetooth;
     private Handler mHandler;
 
     private final BluetoothAdapter mBluetoothAdapter;
@@ -33,6 +37,7 @@ public class BluetoothService{
 
     public BluetoothService(Context context) {
         mContext = context;
+        mHandlerBluetooth = (LaunchingActivity) context;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mHandler = new Handler(){
             @Override
@@ -61,8 +66,8 @@ public class BluetoothService{
     }
 
     public void connected() {
+        mHandlerBluetooth.deviceConnectedEvent(mDevice.getName());
         Toast.makeText(mContext, "Bluetooth port connection established with " + mDevice.getName(), Toast.LENGTH_LONG).show();
-
     }
 
     public void connectionFailed() {
@@ -75,6 +80,7 @@ public class BluetoothService{
 
     public void receiveCode(String data) {
         Toast.makeText(mContext, "Scanned: " + data, Toast.LENGTH_SHORT).show();
+        mHandlerBluetooth.handleBarcode(data);
     }
 
     public synchronized void connect(BluetoothDevice device) {
