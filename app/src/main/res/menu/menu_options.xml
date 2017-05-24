@@ -5,4 +5,7 @@
         android:id="@+id/refreshOption"
         android:title="Refresh"/>
 
+    <item
+        android:id="@+id/clearHistoryOption"
+        android:title="Clear Scan History"/>
 </menu>

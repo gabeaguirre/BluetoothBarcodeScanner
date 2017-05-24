@@ -48,4 +48,25 @@
         android:layout_height="wrap_content"
         android:visibility="gone"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+    <TextView
+        android:id="@+id/scanHistoryTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scan History"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:visibility="gone"
+        android:textStyle="bold"/>
+
+    <ListView
+        android:id="@+id/scanHistoryListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:choiceMode="singleChoice"/>
+
 </LinearLayout>
