@@ -40,6 +40,7 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
     private ListView mListView;
     private BluetoothService mBluetoothService;
 
+    private TextView mTextView;
     private TextView mConnectedToTv;
     private TextView mConnectedDeviceTv;
     private Button mDisconnectButton;
@@ -59,6 +60,7 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
                 mBluetoothService.connect(mDeviceAdapter.getItem(i).device);
             }
         });
+        mTextView = (TextView) findViewById(R.id.textView);
         mConnectedToTv = (TextView) findViewById(R.id.connectedToTv);
         mConnectedDeviceTv = (TextView) findViewById(R.id.connectedDeviceTv);
         mDisconnectButton = (Button) findViewById(R.id.disconnectButton);
@@ -69,6 +71,13 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
             }
         });
         startBluetooth();
+    }
+
+    @Override
+    protected void onResume() {
+        System.out.println("RESUME IS RUNNING");
+        initBluetooth();
+        super.onResume();
     }
 
     @Override
@@ -153,11 +162,13 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
         mConnectedDeviceTv.setVisibility(View.GONE);
         mDisconnectButton.setVisibility(View.GONE);
         mListView.setVisibility(View.VISIBLE);
+        mTextView.setText("Paired Devices (select one to connect)");
     }
 
     @Override
     public void deviceConnectedEvent(boolean connected, String name) {
         if(connected) {
+            mTextView.setText("Disconnect to pair to another device!");
             mConnectedToTv.setVisibility(View.VISIBLE);
             mConnectedDeviceTv.setVisibility(View.VISIBLE);
             mConnectedDeviceTv.setText(name);
