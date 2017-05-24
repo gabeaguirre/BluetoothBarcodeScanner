@@ -33,7 +33,7 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
     private static final int REQUEST_ENABLE_BT = 1;
     private Set<BluetoothDevice> mDevicesSet;
     private BluetoothDevice[] mDevicesArray;
-    private ArrayList<Device> mDeviceStatusArray;
+    private ArrayList<Device> mDeviceArray;
     private DeviceAdapter mDeviceAdapter;
     private ListView mListView;
     private BluetoothService mBluetoothService;
@@ -47,8 +47,8 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launching);
 
-        mDeviceStatusArray = new ArrayList<>();
-        mDeviceAdapter = new DeviceAdapter(this, mDeviceStatusArray);
+        mDeviceArray = new ArrayList<>();
+        mDeviceAdapter = new DeviceAdapter(this, mDeviceArray);
         mListView = (ListView) findViewById(R.id.listView);
         mListView.setAdapter(mDeviceAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -63,10 +63,7 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
         mDisconnectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mBluetoothService.disconnect(true);
-                mConnectedToTv.setVisibility(View.GONE);
-                mConnectedDeviceTv.setVisibility(View.GONE);
-                mDisconnectButton.setVisibility(View.GONE);
+                disconnectScanner();
             }
         });
         startBluetooth();
@@ -132,12 +129,25 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
                 .show();
     }
 
+    private void disconnectScanner(){
+        mBluetoothService.disconnect(true);
+        mConnectedToTv.setVisibility(View.GONE);
+        mConnectedDeviceTv.setVisibility(View.GONE);
+        mDisconnectButton.setVisibility(View.GONE);
+        mListView.setVisibility(View.VISIBLE);
+    }
+
     @Override
-    public void deviceConnectedEvent(String name) {
-        mConnectedToTv.setVisibility(View.VISIBLE);
-        mConnectedDeviceTv.setVisibility(View.VISIBLE);
-        mConnectedDeviceTv.setText(name);
-        mDisconnectButton.setText("Disconnect from " + name);
-        mDisconnectButton.setVisibility(View.VISIBLE);
+    public void deviceConnectedEvent(boolean connected, String name) {
+        if(connected) {
+            mConnectedToTv.setVisibility(View.VISIBLE);
+            mConnectedDeviceTv.setVisibility(View.VISIBLE);
+            mConnectedDeviceTv.setText(name);
+            mDisconnectButton.setText("Disconnect from " + name);
+            mDisconnectButton.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.GONE);
+        } else {
+            disconnectScanner();
+        }
     }
 }
