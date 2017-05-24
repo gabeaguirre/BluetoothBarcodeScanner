@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
 
     private TextView mConnectedToTv;
     private TextView mConnectedDeviceTv;
+    private Button mDisconnectButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,16 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
         });
         mConnectedToTv = (TextView) findViewById(R.id.connectedToTv);
         mConnectedDeviceTv = (TextView) findViewById(R.id.connectedDeviceTv);
+        mDisconnectButton = (Button) findViewById(R.id.disconnectButton);
+        mDisconnectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBluetoothService.disconnect(true);
+                mConnectedToTv.setVisibility(View.GONE);
+                mConnectedDeviceTv.setVisibility(View.GONE);
+                mDisconnectButton.setVisibility(View.GONE);
+            }
+        });
         startBluetooth();
     }
 
@@ -89,11 +101,9 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
             mDevicesSet = mBluetoothService.getBondedScanners();
             mDevicesArray = mDevicesSet.toArray(new BluetoothDevice[mDevicesSet.size()]);
             if(mDevicesSet != null){
-                int index = 0;
                 for (BluetoothDevice device: mDevicesSet) {
-                    Device theDevice = new Device(device, index);
+                    Device theDevice = new Device(device);
                     mDeviceAdapter.add(theDevice);
-                    index++;
                 }
                 mDeviceAdapter.notifyDataSetChanged();
             }
@@ -125,6 +135,9 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
     @Override
     public void deviceConnectedEvent(String name) {
         mConnectedToTv.setVisibility(View.VISIBLE);
+        mConnectedDeviceTv.setVisibility(View.VISIBLE);
         mConnectedDeviceTv.setText(name);
+        mDisconnectButton.setText("Disconnect from " + name);
+        mDisconnectButton.setVisibility(View.VISIBLE);
     }
 }

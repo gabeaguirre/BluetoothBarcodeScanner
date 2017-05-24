@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:text="Paired Devices (select one to connect)"
         android:textColor="@android:color/black"
+        android:textSize="18sp"
         android:textStyle="bold"/>
 
     <ListView
@@ -40,5 +41,11 @@
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/disconnectButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
 </LinearLayout>
