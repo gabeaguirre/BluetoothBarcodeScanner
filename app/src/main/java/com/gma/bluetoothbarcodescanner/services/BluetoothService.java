@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.os.ParcelUuid;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.gma.bluetoothbarcodescanner.activities.LaunchingActivity;
@@ -66,15 +67,17 @@ public class BluetoothService{
     }
 
     public void connected() {
-        mHandlerBluetooth.deviceConnectedEvent(mDevice.getName());
+        mHandlerBluetooth.deviceConnectedEvent(true, mDevice.getName());
         Toast.makeText(mContext, "Bluetooth port connection established with " + mDevice.getName(), Toast.LENGTH_LONG).show();
     }
 
     public void connectionFailed() {
+        mHandlerBluetooth.deviceConnectedEvent(false, mDevice.getName());
         Toast.makeText(mContext, "Bluetooth connection failed...", Toast.LENGTH_LONG).show();
     }
 
     public void connectionLost() {
+        mHandlerBluetooth.deviceConnectedEvent(false, mDevice.getName());
         Toast.makeText(mContext, "Bluetooth connection lost...", Toast.LENGTH_LONG).show();
     }
 
@@ -196,13 +199,18 @@ public class BluetoothService{
                 e.printStackTrace();
             }
             mmInStream = tmpIn;
-            mHandler.sendMessage(mHandler.obtainMessage(BLUETOOTH_CONNECTION));
         }
 
         public void run() {
             final int BUFFER_SIZE = 1024;
             byte[] buffer = new byte[BUFFER_SIZE];
             int bytes;
+
+            synchronized (BluetoothService.this) {
+                if(isConnectedAndRunning()) {
+                    mHandler.sendMessage(mHandler.obtainMessage(BLUETOOTH_CONNECTION));
+                }
+            }
 
             while (true) {
                 try {
