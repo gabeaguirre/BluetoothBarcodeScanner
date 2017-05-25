@@ -93,7 +93,6 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
 
     @Override
     protected void onResume() {
-        System.out.println("RESUME IS RUNNING");
         initBluetooth();
         super.onResume();
     }
@@ -164,7 +163,7 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
     public void displayBarcodeDialog(final String barcode) {
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert);
         } else {
             builder = new AlertDialog.Builder(this);
         }
@@ -178,7 +177,6 @@ public class LaunchingActivity extends AppCompatActivity implements HandlerBluet
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {}
                 })
-                .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
 
