@@ -4,5 +4,5 @@ public interface HandlerBluetooth {
 
     void handleBarcode(String barcode);
 
-    void deviceConnectedEvent(String name);
+    void deviceConnectedEvent(boolean connected, String name);
 }
